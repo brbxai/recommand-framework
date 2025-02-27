@@ -1,0 +1,47 @@
+{
+  "name": "recommand-framework",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"bun run server:dev\" \"bun run app:dev\"",
+    "build": "bun run app:build",
+    "serve": "bun run server:prod",
+    "server:dev": "NODE_ENV=development bun run --hot index.ts",
+    "server:prod": "NODE_ENV=production bun run index.ts",
+    "db:generate": "drizzle-kit generate",
+    "app:dev": "NODE_ENV=development vite",
+    "app:build": "NODE_ENV=production tsc && vite build",
+    "app:preview": "NODE_ENV=production vite preview"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/pg": "^8.11.11",
+    "concurrently": "^8.2.2",
+    "drizzle-kit": "^0.30.4",
+    "tsx": "^4.19.3",
+    "vite": "^6.1.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^2.2.0",
+    "typescript": "^4.6.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.4.3",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@tailwindcss/vite": "^4.0.8",
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.39.3",
+    "hono": "^4.7.2",
+    "jose": "^6.0.6",
+    "pg": "^8.13.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "ulid": "^2.3.0",
+    "zod": "^3.24.2"
+  }
+}
