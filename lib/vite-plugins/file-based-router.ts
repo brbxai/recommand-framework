@@ -26,6 +26,7 @@ async function getAllRoutes(app: RecommandApp, directory: string, routePath: str
 
     if (file.isDirectory()) {
       const isHidden = file.name.startsWith("(");
+      const isParameter = file.name.startsWith("[");
       if(isHidden) {
         const childRoute = await getAllRoutes(app, fullPath, routePath);
         if(childRoute) {
@@ -36,6 +37,13 @@ async function getAllRoutes(app: RecommandApp, directory: string, routePath: str
             route.layoutFilePath = childRoute.layoutFilePath;
           }
           route.children = [...route.children, ...childRoute.children];
+        }
+      } else if (isParameter) {
+        // Parameter routes should start with a colon and have no []
+        const parameterName = file.name.slice(1, -1);
+        const childRoute = await getAllRoutes(app, fullPath, routePath + "/:" + parameterName);
+        if (childRoute) {
+          route.children.push(childRoute);
         }
       }else{
         const childRoute = await getAllRoutes(app, fullPath, routePath + "/" + file.name);
