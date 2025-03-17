@@ -31,17 +31,20 @@
   "dependencies": {
     "@hono/zod-validator": "^0.4.3",
     "@radix-ui/react-slot": "^1.1.2",
+    "@scalar/hono-api-reference": "^0.7.1",
     "@tailwindcss/vite": "^4.0.8",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "drizzle-orm": "0.39.3",
     "hono": "^4.7.2",
+    "hono-openapi": "^0.4.6",
     "jose": "^6.0.6",
     "pg": "^8.13.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "ulid": "^2.3.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "zod-openapi": "^4.2.3"
   }
 }
