@@ -19,7 +19,7 @@ export async function getApps(): Promise<RecommandApp[]> {
         const fullPath = join(rootDir, item);
         const stats = await stat(fullPath);
         
-        if (stats.isDirectory() && item !== "recommand-framework" && !item.startsWith(".")) {
+        if (stats.isDirectory() && item !== "recommand-framework" && !item.startsWith(".") && item !== "node_modules") {
             apps.push({ name: item, absolutePath: fullPath });
         }
     }

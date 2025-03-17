@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import type { Plugin } from "vite";
-import { getApps, type RecommandApp } from "../../lib/app";
+import { getApps, type RecommandApp } from "../app";
 
 type Route = {
   route: string;

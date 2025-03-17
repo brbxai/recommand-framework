@@ -1,4 +1,4 @@
-import type { RecommandApp } from "../lib/app";
+import type { RecommandApp } from "./app";
 import { db } from "@db/index";
 import { join } from "node:path";
 import { readFile } from "node:fs/promises";
