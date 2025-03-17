@@ -30,9 +30,16 @@ for (const app of apps) {
 if(isDev){
   // For all other routes, proxy to the app on port 5173
   hono.all("*", async (c) => {
-    return proxy(`http://localhost:5173/${c.req.path}`, {
+    const response = await proxy(`http://localhost:5173/${c.req.path}`, {
       ...c.req,
     });
+    
+    // Add cache control headers to the response
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   });
 }else{
   // For all other routes, return static files from the dist folder
