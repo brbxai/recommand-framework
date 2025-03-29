@@ -5,6 +5,7 @@ import { getApps, type RecommandApp } from "../app";
 
 type Route = {
   route: string;
+  relativePath: string;
   pageFilePath: string | null;
   layoutFilePath: string | null;
   children: Route[];
@@ -13,6 +14,7 @@ type Route = {
 async function getAllRoutes(app: RecommandApp, directory: string, routePath: string): Promise<Route | null> {
   const route: Route = {
     route: routePath,
+    relativePath: path.relative(app.absolutePath, directory),
     pageFilePath: null,
     layoutFilePath: null,
     children: [],
@@ -30,13 +32,7 @@ async function getAllRoutes(app: RecommandApp, directory: string, routePath: str
       if(isHidden) {
         const childRoute = await getAllRoutes(app, fullPath, routePath);
         if(childRoute) {
-          if(childRoute.pageFilePath) {
-            route.pageFilePath = childRoute.pageFilePath;
-          }
-          if(childRoute.layoutFilePath) {
-            route.layoutFilePath = childRoute.layoutFilePath;
-          }
-          route.children = [...route.children, ...childRoute.children];
+          route.children.push(childRoute);
         }
       } else if (isParameter) {
         // Parameter routes should start with a colon and have no []
@@ -81,9 +77,9 @@ function mergeRoutes(routes: Route[]): Route[] {
   const routeMap = new Map<string, Route>();
 
   for (const route of routes) {
-    const existing = routeMap.get(route.route);
+    const existing = routeMap.get(route.relativePath);
     if (!existing) {
-      routeMap.set(route.route, { ...route });
+      routeMap.set(route.relativePath, { ...route });
       continue;
     }
 
