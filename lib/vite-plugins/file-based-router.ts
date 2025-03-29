@@ -145,6 +145,7 @@ export function FileBasedRouterPlugin(): Plugin {
 
           return {
             route: route.route,
+            relativePath: route.relativePath,
             componentName,
             children: processedChildren
           };
@@ -180,6 +181,7 @@ export function FileBasedRouterPlugin(): Plugin {
             function mapComponents(node) {
               return {
                 route: node.route,
+                relativePath: node.relativePath,
                 PageComponent: ${generateComponentMapping('page')},
                 LayoutComponent: ${generateComponentMapping('layout')},
                 children: node.children.map(child => mapComponents(child))

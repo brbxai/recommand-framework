@@ -2,6 +2,7 @@
 declare module "virtual:recommand-file-based-router" {
   interface Route {
     route: string;
+    relativePath: string;
     pageFilePath: string | null;
     PageComponent: React.ComponentType | null;
     layoutFilePath: string | null;
