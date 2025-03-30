@@ -27,9 +27,9 @@ async function getAllRoutes(app: RecommandApp, directory: string, routePath: str
     const fullPath = path.join(directory, file.name);
 
     if (file.isDirectory()) {
-      const isHidden = file.name.startsWith("(");
+      const isGroup = file.name.startsWith("(");
       const isParameter = file.name.startsWith("[");
-      if(isHidden) {
+      if(isGroup) {
         const childRoute = await getAllRoutes(app, fullPath, routePath);
         if(childRoute) {
           route.children.push(childRoute);
