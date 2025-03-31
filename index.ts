@@ -27,7 +27,18 @@ await migrateApp({
   absolutePath: __dirname,
 });
 for (const app of apps) {
+  // Load the .env file for the app, if it exists
+  const envPath = path.resolve(app.absolutePath, ".env");
+  if (await fs.exists(envPath)) {
+    const env = await fs.readFile(envPath, "utf-8");
+    const envVars = env.split("\n").map((line) => line.split("="));
+    for (const [key, value] of envVars) {
+      process.env[key.trim()] = value.trim();
+    }
+  }
+  // Migrate the app
   await migrateApp(app);
+  // Attach the app to the hono instance
   await attach(app, hono);
 }
 
