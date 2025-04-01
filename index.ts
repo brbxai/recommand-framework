@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { getApps } from "./lib/app";
 import { attach } from "./lib/attach";
-import { migrateApp } from "./lib/migrate";
+import { migrateAllApps } from "./lib/migrate";
 import { cors } from "hono/cors";
 import { proxy } from "hono/proxy";
 import { serveStatic } from "hono/bun";
@@ -22,10 +22,18 @@ hono.use(
 );
 
 const apps = await getApps();
-await migrateApp({
+// Create a framework app object for migrations
+const frameworkApp = {
   name: "__recommand_framework",
   absolutePath: __dirname,
-});
+};
+
+// Include the framework app in the migration
+const allApps = [frameworkApp, ...apps];
+
+// Run all migrations chronologically across all apps
+await migrateAllApps(allApps);
+
 for (const app of apps) {
   // Load the .env file for the app, if it exists
   const envPath = path.resolve(app.absolutePath, ".env");
@@ -36,8 +44,6 @@ for (const app of apps) {
       process.env[key.trim()] = value.trim();
     }
   }
-  // Migrate the app
-  await migrateApp(app);
   // Attach the app to the hono instance
   await attach(app, hono);
 }
@@ -63,7 +69,7 @@ hono.get(
     // @ts-ignore
     spec: { url: "/openapi" },
   })
-)
+);
 
 if (isDev) {
   // For all other routes, proxy to the app on port 5173
