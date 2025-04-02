@@ -28,13 +28,8 @@ const frameworkApp = {
   absolutePath: __dirname,
 };
 
-// Include the framework app in the migration
-const allApps = [frameworkApp, ...apps];
-
-// Run all migrations chronologically across all apps
-await migrateAllApps(allApps);
-
-for (const app of apps) {
+// Load the .env  file for all apps
+for (const app of [frameworkApp, ...apps]) {
   // Load the .env file for the app, if it exists
   const envPath = path.resolve(app.absolutePath, ".env");
   if (await fs.exists(envPath)) {
@@ -44,6 +39,13 @@ for (const app of apps) {
       process.env[key.trim()] = value.trim();
     }
   }
+}
+
+// Run all migrations chronologically across all apps
+await migrateAllApps([frameworkApp, ...apps]);
+
+// Attach all apps
+for (const app of apps) {
   // Attach the app to the hono instance
   await attach(app, hono);
 }

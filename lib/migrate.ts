@@ -8,42 +8,44 @@ import { migrations } from "@db/schema";
 import { sql } from "drizzle-orm";
 import { frameworkLogger } from "./logger";
 
+type MigrationInfo = {
+  app: RecommandApp;
+  filename: string;
+  path: string;
+  content: string;
+};
+
 export async function migrateAllApps(apps: RecommandApp[]) {
-  // First, collect all migrations from all apps
-  type MigrationInfo = {
-    app: RecommandApp;
-    filename: string;
-    path: string;
-    content: string;
-  };
-
-  const allMigrations: MigrationInfo[] = [];
-
   // First the framework migrations
   const frameworkApp = apps.find((app) => app.name === "__recommand_framework");
   if (frameworkApp) {
-    await collectMigrationsFromApp(frameworkApp, allMigrations);
+    const frameworkMigrations = await collectMigrationsFromApp(frameworkApp);
+    frameworkMigrations.sort((a, b) => a.filename.localeCompare(b.filename));
+    for (const migration of frameworkMigrations) {
+      await applyMigration(migration);
+    }
   }
 
   // Then all other apps
+  const allMigrations: MigrationInfo[] = [];
   for (const app of apps) {
     if (app.name === "__recommand_framework") continue; // Skip framework as it's already processed
-    await collectMigrationsFromApp(app, allMigrations);
+    allMigrations.push(...(await collectMigrationsFromApp(app)));
   }
 
-  // Sort all migrations chronologically by filename
+  // Sort all app migrations chronologically by filename
   allMigrations.sort((a, b) => a.filename.localeCompare(b.filename));
 
-  // Apply migrations in order
+  // Apply migrations in chronological order
   for (const migration of allMigrations) {
     await applyMigration(migration);
   }
 }
 
 async function collectMigrationsFromApp(
-  app: RecommandApp,
-  allMigrations: any[]
-) {
+  app: RecommandApp
+): Promise<MigrationInfo[]> {
+  const allMigrations: MigrationInfo[] = [];
   const migrationsPath = join(app.absolutePath, "db", "drizzle");
 
   try {
@@ -64,8 +66,10 @@ async function collectMigrationsFromApp(
     }
   } catch (error) {
     // Skip if the migrations directory doesn't exist
-    frameworkLogger.info(`No migrations found for app: ${app.name}`);
+    frameworkLogger.warn(`No migrations found for app: ${app.name}`);
   }
+
+  return allMigrations;
 }
 
 async function applyMigration(migration: {
