@@ -1,5 +1,4 @@
-import { readdir } from "node:fs/promises";
-import { stat } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 
 export type RecommandApp = {
@@ -20,7 +19,13 @@ export async function getApps(): Promise<RecommandApp[]> {
         const stats = await stat(fullPath);
         
         if (stats.isDirectory() && item !== "recommand-framework" && !item.startsWith(".") && item !== "node_modules") {
-            apps.push({ name: item, absolutePath: fullPath });
+
+            // Get the app name from the package.json
+            const packageJson = await readFile(join(fullPath, "package.json"), "utf-8");
+            const packageJsonData = JSON.parse(packageJson);
+            const appName = packageJsonData.name;
+
+            apps.push({ name: appName, absolutePath: fullPath });
         }
     }
 
