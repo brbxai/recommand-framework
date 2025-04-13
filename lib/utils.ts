@@ -33,7 +33,7 @@ export function actionSuccess<T = {}>(
  * if (!result.success) return actionFailure(result.error);
  */
 export function actionFailure(
-  ...errors: { [key: string]: string[] }[] | z.ZodError[] | string[]
+  ...errors: { [key: string]: string[] }[] | z.ZodError[] | string[] | Error[]
 ): {
   success: false;
   errors: { [key: string]: string[] | undefined };
@@ -44,6 +44,8 @@ export function actionFailure(
     resultingErrors = (errors[0] as z.ZodError).flatten().fieldErrors;
   } else if (Array.isArray(errors[0])) {
     resultingErrors = errors[0] as { [key: string]: string[] };
+  } else if (errors[0] instanceof Error) {
+    resultingErrors = { root: [errors[0].message] };
   } else {
     resultingErrors = { root: errors as string[] };
   }
