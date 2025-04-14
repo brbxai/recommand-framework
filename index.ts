@@ -81,6 +81,7 @@ hono.get(
     pageTitle: "Recommand API Documentation",
     // @ts-ignore
     spec: { url: "/openapi" },
+    hideClientButton: true,
     authentication: {
       preferredSecurityScheme: "httpBasic",
       securitySchemes: {
