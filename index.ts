@@ -57,9 +57,19 @@ hono.get(
       info: {
         title: "Recommand API",
         version: "1.0.0",
-        description: "Recommand API",
+        description: `Welcome to the Recommand API documentation.`,
       },
       servers: [{ url: "http://localhost:3000", description: "Local Server" }],
+      components: {
+        securitySchemes: {
+          httpBasic: {
+            type: "http",
+            scheme: "basic",
+            description: "Basic API key authentication. Create a new API key and secret in the Recommand dashboard.",
+          },
+        },
+      },
+      security: [{ httpBasic: [] }],
     },
   })
 );
@@ -68,8 +78,18 @@ hono.get(
   "/docs",
   apiReference({
     theme: "saturn",
+    pageTitle: "Recommand API Documentation",
     // @ts-ignore
     spec: { url: "/openapi" },
+    authentication: {
+      preferredSecurityScheme: "httpBasic",
+      securitySchemes: {
+        httpBasic: {
+          username: "key_xxx (replace with your API key)",
+          password: "secret_xxx (replace with your API secret)",
+        },
+      },
+    },
   })
 );
 
