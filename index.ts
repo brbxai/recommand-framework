@@ -16,7 +16,7 @@ const hono = new Hono();
 
 hono.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:3000"],
+    origin: [process.env.BASE_URL],
     credentials: true,
   })
 );
@@ -59,7 +59,7 @@ hono.get(
         version: "1.0.0",
         description: `Welcome to the Recommand API documentation.`,
       },
-      servers: [{ url: "http://localhost:3000", description: "Local Server" }],
+      servers: [{ url: process.env.BASE_URL, description: "Recommand API" }],
       components: {
         securitySchemes: {
           httpBasic: {
