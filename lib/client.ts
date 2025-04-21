@@ -7,5 +7,5 @@ import { hc } from "hono/client";
  * @returns A client for the given url
  */
 export function rc<T extends Hono<any, any, any>>(url: string) {
-  return hc<T>(process.env.BASE_URL + '/api/' + url);
+  return hc<T>('/api/' + url);
 }
