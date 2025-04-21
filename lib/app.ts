@@ -18,12 +18,16 @@ export async function getApps(): Promise<RecommandApp[]> {
         const fullPath = join(rootDir, item);
         const stats = await stat(fullPath);
         
-        if (stats.isDirectory() && item !== "recommand-framework" && !item.startsWith(".") && item !== "node_modules") {
+        if (stats.isDirectory() && !item.startsWith(".") && item !== "node_modules") {
 
             // Get the app name from the package.json
             const packageJson = await readFile(join(fullPath, "package.json"), "utf-8");
             const packageJsonData = JSON.parse(packageJson);
             const appName = packageJsonData.name;
+
+            if(appName === "recommand-framework") {
+                continue;
+            }
 
             apps.push({ name: appName, absolutePath: fullPath });
         }
