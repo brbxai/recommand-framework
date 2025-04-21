@@ -33,5 +33,8 @@ export async function getApps(): Promise<RecommandApp[]> {
         }
     }
 
+    // Sort apps by name
+    apps.sort((a, b) => a.name.localeCompare(b.name));
+
     return apps;
 }
