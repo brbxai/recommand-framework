@@ -9,6 +9,7 @@ import fs from "fs/promises";
 import path from "path";
 import { openAPISpecs } from "hono-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
+import { actionFailure } from "./lib/utils";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -53,6 +54,11 @@ for (const app of apps) {
     indexOverride = appIndexOverride;
   }
 }
+
+hono.onError((err, c) => {
+  console.error(err);
+  return c.json(actionFailure(isDev ? err.message : "An error occurred."), 500);
+});
 
 hono.get(
   "/openapi",
