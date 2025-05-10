@@ -195,4 +195,7 @@ window.__vite_plugin_react_preamble_installed__ = true
   );
 }
 
-export default hono;
+export default {
+  fetch: hono.fetch,
+  idleTimeout: -1
+}
