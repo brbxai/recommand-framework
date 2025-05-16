@@ -8,8 +8,8 @@ export const migrations = pgTable("__recommand_migrations", {
     .$defaultFn(() => "migration_" + ulid()),
   filename: text("filename").notNull(),
   app: text("app").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "string" })
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "string", withTimezone: true })
     .defaultNow()
     .notNull()
     .$onUpdate(() => sql`now()`),
