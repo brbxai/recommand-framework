@@ -1,0 +1,2 @@
+ALTER TABLE "__recommand_migrations" ALTER COLUMN "created_at" SET DATA TYPE timestamp with time zone;--> statement-breakpoint
+ALTER TABLE "__recommand_migrations" ALTER COLUMN "updated_at" SET DATA TYPE timestamp with time zone;
