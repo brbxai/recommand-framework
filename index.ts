@@ -16,7 +16,7 @@ const hono = new Hono();
 
 hono.use(
   cors({
-    origin: [process.env.BASE_URL],
+    origin: [process.env.BASE_URL!],
     credentials: true,
   })
 );
@@ -65,7 +65,8 @@ hono.get(
           httpBasic: {
             type: "http",
             scheme: "basic",
-            description: "Basic API key authentication. Create a new API key and secret in the Recommand dashboard.",
+            description:
+              "Basic API key authentication. Create a new API key and secret in the Recommand dashboard.",
           },
         },
       },
