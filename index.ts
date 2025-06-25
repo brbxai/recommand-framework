@@ -86,7 +86,7 @@ hono.get(
 );
 
 hono.get(
-  "/docs",
+  "/api-reference",
   apiReference({
     theme: "saturn",
     pageTitle: "Recommand API Documentation",
@@ -104,6 +104,11 @@ hono.get(
     },
   })
 );
+
+// For backwards compatibility, redirect /docs to /api-reference
+hono.get("/docs", (c) => {
+  return c.redirect("/api-reference");
+});
 
 if (isDev) {
   // For all other routes, proxy to the app on port 5173
