@@ -69,7 +69,7 @@ hono.get(
         version: "1.0.0",
         description: `Welcome to the Recommand API documentation.`,
       },
-      servers: [{ url: process.env.BASE_URL, description: "Recommand API" }],
+      servers: [{ url: process.env.BASE_URL!, description: "Recommand API" }],
       components: {
         securitySchemes: {
           httpBasic: {
@@ -131,7 +131,7 @@ window.__vite_plugin_react_preamble_installed__ = true
       let newIndexHtml = indexHtml.replace("</head>", script + "</head>");
 
       // Add the module script to the body
-      const moduleScript = `<script type="module" src="/src/main.tsx"></script>`
+      const moduleScript = `<script type="module" src="/src/main.tsx"></script>`;
       newIndexHtml = newIndexHtml.replace("</body>", moduleScript + "</body>");
       return c.html(newIndexHtml);
     }
@@ -156,14 +156,24 @@ window.__vite_plugin_react_preamble_installed__ = true
   const publicDirFilenames = await fs.readdir(distPath);
 
   // As the indexOverride does not have the correct script and stylesheet tags, we need to copy those from the index.html in the dist folder
-  if(indexOverride){
-    const distIndexHtml = await fs.readFile(path.join(distPath, "index.html"), "utf-8");
+  if (indexOverride) {
+    const distIndexHtml = await fs.readFile(
+      path.join(distPath, "index.html"),
+      "utf-8"
+    );
     const overrideIndexHtml = await fs.readFile(indexOverride, "utf-8");
     // Get the <script type="module" ... and <link rel="stylesheet" ... tags
-    const distScript = distIndexHtml.match(/<script type="module"[^>]*>.*?<\/script>/g);
+    const distScript = distIndexHtml.match(
+      /<script type="module"[^>]*>.*?<\/script>/g
+    );
     const distStylesheet = distIndexHtml.match(/<link rel="stylesheet"[^>]*>/g);
     // Add those to the overrideIndexHtml
-    const newOverrideIndexHtml = overrideIndexHtml.replace("</head>", (distScript?.toString() ?? "") + (distStylesheet?.toString() ?? "") + "</head>");
+    const newOverrideIndexHtml = overrideIndexHtml.replace(
+      "</head>",
+      (distScript?.toString() ?? "") +
+        (distStylesheet?.toString() ?? "") +
+        "</head>"
+    );
     // Write the overrideIndexHtml to the dist folder as index_override.html
     indexOverride = path.join(distPath, "index_override.html");
     await fs.writeFile(indexOverride, newOverrideIndexHtml);
@@ -184,7 +194,9 @@ window.__vite_plugin_react_preamble_installed__ = true
 
         // Ensure the resolved path is within the dist directory
         if (!fullPath.startsWith(distPath)) {
-          return indexOverride || path.join(process.cwd(), "app/dist/index.html");
+          return (
+            indexOverride || path.join(process.cwd(), "app/dist/index.html")
+          );
         }
 
         // Check if the file exists in the dist directory
@@ -202,5 +214,5 @@ window.__vite_plugin_react_preamble_installed__ = true
 
 export default {
   fetch: hono.fetch,
-  idleTimeout: -1
-}
+  idleTimeout: -1,
+};
