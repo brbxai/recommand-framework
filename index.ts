@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono, type MiddlewareHandler } from "hono";
 import { getApps } from "./lib/app";
 import { attach } from "./lib/attach";
 import { migrateAllApps } from "./lib/migrate";
