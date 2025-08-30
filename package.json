@@ -28,6 +28,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.7.2",
     "@radix-ui/react-slot": "^1.1.2",
     "@scalar/hono-api-reference": "^0.7.1",
     "@tailwindcss/vite": "^4.1.4",
