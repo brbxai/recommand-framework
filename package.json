@@ -11,7 +11,9 @@
     "db:generate": "drizzle-kit generate",
     "app:dev": "NODE_ENV=development vite",
     "app:build": "NODE_ENV=production tsc && vite build",
-    "app:preview": "NODE_ENV=production vite preview"
+    "app:preview": "NODE_ENV=production vite preview",
+    "init-package": "bun run scripts/init-package.ts",
+    "rm-package": "bun run scripts/rm-package.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
