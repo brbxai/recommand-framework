@@ -1,6 +1,5 @@
 import { index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { ulid } from "ulid";
-import { sql } from "drizzle-orm";
 import { autoUpdateTimestamp } from "@recommand/db/custom-types";
 
 export const migrations = pgTable("__recommand_migrations", {
