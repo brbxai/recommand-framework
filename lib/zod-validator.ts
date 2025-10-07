@@ -1,6 +1,6 @@
 import type { ValidationTargets } from 'hono';
 import type { z } from 'zod';
-import { validator as baseZValidator } from "hono-openapi/zod";
+import { validator as baseZValidator, resolver as baseZResolver } from "hono-openapi/zod";
 
 export function zodValidator<
     T extends z.ZodType,
@@ -20,6 +20,10 @@ export function zodValidator<
             }, 400);
         }
     });
+}
+
+export function zodResolver(schema: z.ZodType) {
+    return baseZResolver(schema);
 }
 
 const cleanZodError = (error: z.ZodError): {invalidInputDetails: any[], listedErrors: {[key: string]: string[]}} => {
