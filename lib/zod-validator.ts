@@ -1,7 +1,6 @@
 import type { ValidationTargets } from 'hono';
 import type { z } from 'zod';
 import { validator as baseZValidator } from "hono-openapi/zod";
-import { actionFailure } from './utils';
 
 export function zodValidator<
     T extends z.ZodType,
@@ -12,23 +11,26 @@ export function zodValidator<
 ) {
     return baseZValidator(target, schema, (result, c) => {
         if (!result.success) {
+            const {invalidInputDetails, listedErrors} = cleanZodError(result.error);
             return c.json({
                 errors: {
-                    ...actionFailure(result.error).errors,
-                    invalidInputDetails: cleanZodError(result.error),
+                    ...listedErrors,
                 },
+                invalidInputDetails,
             }, 400);
         }
     });
 }
 
-const cleanZodError = (error: z.ZodError): any[] => {
+const cleanZodError = (error: z.ZodError): {invalidInputDetails: any[], listedErrors: {[key: string]: string[]}} => {
     // Output the error in a more readable format with path and message for each error
     const errorsArray = [];
+    const listedErrors: {[key: string]: string[]} = {};
     for (const issue of error.issues) {
         if (issue.code === 'invalid_union') {
             const outerErrors = [];
             for (const unionError of issue.unionErrors) {
+                console.log(JSON.stringify(unionError, null, 2));
                 const innerErrors = [];
                 for (const unionErrorIssue of unionError.issues) {
                     innerErrors.push({
@@ -43,12 +45,14 @@ const cleanZodError = (error: z.ZodError): any[] => {
                 message: "Invalid union, fix at least one of the following errors depending on the input type you are targeting.",
                 unionErrors: outerErrors,
             });
+            listedErrors[issue.path.join('.')] = [`Invalid union, make sure your input is consistent with one of the possible types for ${issue.path.join('.')}.`];
         }else{
             errorsArray.push({
                 path: issue.path.join('.'),
                 message: issue.message,
             });
+            listedErrors[issue.path.join('.')] = [issue.path.join('.') + ": " + issue.message];
         }
     }
-    return errorsArray;
+    return {invalidInputDetails: errorsArray, listedErrors: listedErrors};
 };
