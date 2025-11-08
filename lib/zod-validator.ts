@@ -1,15 +1,17 @@
-import type { ValidationTargets } from 'hono';
+import type { Env, ValidationTargets } from 'hono';
 import type { z } from 'zod';
 import { validator as baseZValidator, resolver as baseZResolver } from "hono-openapi/zod";
 
 export function zodValidator<
     T extends z.ZodType,
     Target extends keyof ValidationTargets,
+    E extends Env,
+    P extends string,
 >(
     target: Target,
     schema: T,
 ) {
-    return baseZValidator(target, schema, (result, c) => {
+    return baseZValidator<T, Target, E, P>(target, schema, (result, c) => {
         if (!result.success) {
             const {invalidInputDetails, listedErrors} = cleanZodError(result.error);
             return c.json({
