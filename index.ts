@@ -15,9 +15,11 @@ const isDev = process.env.NODE_ENV === "development";
 
 const hono = new Hono();
 
+const rootDomain = new URL(process.env.BASE_URL!).hostname.split(".").slice(-2).join(".");
+const protocol = new URL(process.env.BASE_URL!).protocol;
 hono.use(
   cors({
-    origin: [process.env.BASE_URL!],
+    origin: [process.env.BASE_URL!, `${protocol}//${rootDomain}`],
     credentials: true,
   })
 );
