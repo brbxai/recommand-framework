@@ -13,7 +13,7 @@ export async function attach(
   const appModule = await import(join(app.absolutePath, "index.ts"));
   await appModule.init(app, hono);
   try {
-    hono.route("api/" + app.name, appModule.default);
+    hono.route(["api", app.apiMount ?? app.name].filter(Boolean).join("/"), appModule.default);
   } catch (e) {
     frameworkLogger.error(`Failed to register api routes for ${app.name}`);
   }

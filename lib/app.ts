@@ -3,6 +3,7 @@ import { join } from "node:path";
 
 export type RecommandApp = {
     name: string;
+    apiMount?: string;
     absolutePath: string;
 }
 
@@ -24,12 +25,13 @@ export async function getApps(): Promise<RecommandApp[]> {
             const packageJson = await readFile(join(fullPath, "package.json"), "utf-8");
             const packageJsonData = JSON.parse(packageJson);
             const appName = packageJsonData.name;
+            const apiMount = packageJsonData.recommand?.apiMount;
 
             if(appName === "recommand-framework") {
                 continue;
             }
 
-            apps.push({ name: appName, absolutePath: fullPath });
+            apps.push({ name: appName, absolutePath: fullPath, apiMount });
         }
     }
 
