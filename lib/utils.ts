@@ -42,12 +42,14 @@ export function actionFailure(
 
   if (errors[0] instanceof z.ZodError) {
     resultingErrors = (errors[0] as z.ZodError).flatten().fieldErrors;
-  } else if (Array.isArray(errors[0])) {
-    resultingErrors = errors[0] as { [key: string]: string[] };
   } else if (errors[0] instanceof Error) {
     resultingErrors = { root: [errors[0].message] };
+  } else if (typeof errors[0] === "object" && errors[0] !== null && !Array.isArray(errors[0])) {
+    resultingErrors = errors[0];
+  } else if (Array.isArray(errors[0])) {
+    resultingErrors = { root: errors[0] as string[] };
   } else {
-    resultingErrors = { root: errors as string[] };
+    resultingErrors = { root: [errors[0] as string] };
   }
 
   return {
