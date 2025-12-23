@@ -57,6 +57,11 @@ for (const app of apps.reverse()) { // Attach the apps in reverse order to allow
   }
 }
 
+// For all /api/* routes that have no definition, return a 404
+hono.all("/api/*", (c) => {
+  return c.json(actionFailure("Not found"), 404);
+});
+
 hono.onError((err, c) => {
   console.error(err);
   return c.json(actionFailure(isDev ? err.message : "An error occurred."), 500);
