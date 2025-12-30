@@ -106,13 +106,25 @@ async function applyMigration(migration: {
     frameworkLogger.info(`Applying migration: ${migration.filename} for app: ${migration.app.name}`);
 
     // Execute the migration
-    await tx.execute(migration.content);
+    try {
+      await tx.execute(migration.content);
+    } catch (error) {
+      frameworkLogger.error(`Error applying migration: ${migration.filename} for app: ${migration.app.name}`);
+      frameworkLogger.error(error);
+      throw error;
+    }
 
     // Record the migration
-    await tx.insert(migrations).values({
-      filename: migration.filename,
-      app: migration.app.name,
-    });
+    try {
+      await tx.insert(migrations).values({
+        filename: migration.filename,
+        app: migration.app.name,
+      });
+    } catch (error) {
+      frameworkLogger.error(`Error recording migration: ${migration.filename} for app: ${migration.app.name}`);
+      frameworkLogger.error(error);
+      throw error;
+    }
 
     frameworkLogger.info(
       `Applied migration: ${migration.filename} for app: ${migration.app.name}`
