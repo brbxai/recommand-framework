@@ -53,7 +53,6 @@ async function collectMigrationsFromApp(
 
     for (const filename of migrationFiles) {
       if (!filename.endsWith(".sql")) continue;
-      frameworkLogger.info(`Collecting migration: ${filename} for app: ${app.name}`);
 
       const filePath = join(migrationsPath, filename);
       const content = await readFile(filePath, "utf-8");
