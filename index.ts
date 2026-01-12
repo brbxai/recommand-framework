@@ -35,12 +35,15 @@ const frameworkApp = {
 for (const app of [frameworkApp, ...apps]) {
   // Load the .env file for the app, if it exists
   const envPath = path.resolve(app.absolutePath, ".env");
-  if (await fs.exists(envPath)) {
+  try {
+    await fs.access(envPath);
     const env = await fs.readFile(envPath, "utf-8");
     const envVars = env.split("\n").map((line) => line.split("="));
     for (const [key, value] of envVars) {
       process.env[key.trim()] = value.trim();
     }
+  } catch {
+    // .env file doesn't exist for this app, skip
   }
 }
 
