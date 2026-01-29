@@ -13,7 +13,7 @@ export function zodValidator<
 ) {
     return baseZValidator<T, Target, E, P>(target, schema, (result, c) => {
         if (!result.success) {
-            const {invalidInputDetails, listedErrors} = cleanZodError(result.error);
+            const {invalidInputDetails, listedErrors} = cleanZodError(result.error as z.ZodError);
             return c.json({
                 errors: {
                     ...listedErrors,

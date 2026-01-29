@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { execSync } from 'child_process';
-import { existsSync, rmdirSync } from 'fs';
+import { existsSync, rmSync } from 'fs';
 import { join } from 'path';
 import { getProjectRoot } from './utils';
 import { colors } from './utils';
@@ -70,7 +70,7 @@ try {
     // Remove the package directory
     console.log(`${colors.yellow}🗂️  Removing package directory...${colors.reset}`);
     try {
-        rmdirSync(packagePath, { recursive: true });
+        rmSync(packagePath, { recursive: true });
     } catch (error) {
         console.log(`${colors.yellow}⚠️  Could not remove directory, you may need to remove it manually${colors.reset}`);
     }
