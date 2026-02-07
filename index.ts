@@ -1,4 +1,6 @@
-import { Hono, type MiddlewareHandler } from "hono";
+import "./env";
+import { Hono } from "hono";
+import dotenv from "dotenv";
 import { getApps } from "./lib/app";
 import { attach } from "./lib/attach";
 import { migrateAllApps } from "./lib/migrate";
@@ -31,20 +33,10 @@ const frameworkApp = {
   absolutePath: __dirname,
 };
 
-// Load the .env  file for all apps
+// Load per-package .env files (override root values)
 for (const app of [frameworkApp, ...apps]) {
-  // Load the .env file for the app, if it exists
   const envPath = path.resolve(app.absolutePath, ".env");
-  try {
-    await fs.access(envPath);
-    const env = await fs.readFile(envPath, "utf-8");
-    const envVars = env.split("\n").map((line) => line.split("="));
-    for (const [key, value] of envVars) {
-      process.env[key.trim()] = value.trim();
-    }
-  } catch {
-    // .env file doesn't exist for this app, skip
-  }
+  dotenv.config({ path: envPath, override: true });
 }
 
 // Run all migrations chronologically across all apps
