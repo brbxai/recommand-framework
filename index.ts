@@ -1,3 +1,5 @@
+console.log("Starting framework...");
+
 import "./env";
 import { Hono } from "hono";
 import dotenv from "dotenv";
