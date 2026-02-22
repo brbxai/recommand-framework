@@ -36,6 +36,7 @@ const connectionString = sslConfig !== undefined && sslConfig !== false
 const pool = new Pool({
   connectionString,
   ssl: sslConfig,
+  connectionTimeoutMillis: 5000,
 });
 
 const db = drizzle(pool);
