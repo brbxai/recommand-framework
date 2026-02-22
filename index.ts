@@ -39,6 +39,9 @@ for (const app of [frameworkApp, ...apps]) {
   dotenv.config({ path: envPath, override: true });
 }
 
+console.log("Running migrations...");
+console.log(process.env.DATABASE_URL);
+
 // Run all migrations chronologically across all apps
 await migrateAllApps([frameworkApp, ...apps]);
 
